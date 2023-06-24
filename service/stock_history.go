@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"imyashkale/go-aliceblue-sdk/options"
 	"net/http"
 	"time"
@@ -62,6 +63,10 @@ func (a AliceBlue) GetStockHistory(params StockHistoryInput) (StockHistoryRespon
 
 	if rsp.StatusCode() == http.StatusUnauthorized {
 		return StockHistoryResponse{}, errors.New("unauthorized request")
+	}
+
+	if rsp.StatusCode() != http.StatusOK {
+		return StockHistoryResponse{}, fmt.Errorf("get history request failed - %s", rsp.String())
 	}
 
 	if err = json.Unmarshal(rsp.Body(), &sh); err != nil {

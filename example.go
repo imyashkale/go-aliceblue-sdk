@@ -20,7 +20,7 @@ func main() {
 
 	var h service.StockHistoryResponse
 	if h, err = svc.GetStockHistory(service.StockHistoryInput{
-		Token: "1594",
+		Token: "15946",
 		From:  time.Now().AddDate(0, 0, -5),
 		To:    time.Now(),
 	}); err != nil {
