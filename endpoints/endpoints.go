@@ -9,6 +9,7 @@ type Endpoints struct {
 	GetStockHistory   string
 	GetLimits         string
 	Base              string
+	ContractMaster   string
 }
 
 func New(base string) Endpoints {
@@ -21,5 +22,6 @@ func New(base string) Endpoints {
 		GetAccountDetails: fmt.Sprintf("%s/customer/accountDetails", base),
 		GetStockHistory:   fmt.Sprintf("%s/chart/history", base),
 		GetLimits:         fmt.Sprintf("%s/limits/getRmsLimits", base),
+		ContractMaster:   "https://v2api.aliceblueonline.com/restpy/contract_master?exch=NSE",
 	}
 }
