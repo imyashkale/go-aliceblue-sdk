@@ -1,7 +1,12 @@
 package service
 
 import (
+	"errors"
+	"fmt"
 	"imyashkale/go-aliceblue-sdk/endpoints"
+	"os"
+
+	"github.com/joho/godotenv"
 )
 
 type AliceBlue struct {
@@ -22,6 +27,7 @@ type Config struct {
 
 // NewFromConfig
 func NewFromConfig(cf Config) *AliceBlue {
+
 	return &AliceBlue{
 		baseURL:   cf.BaseURL,
 		clientId:  cf.ClientId,
@@ -30,17 +36,39 @@ func NewFromConfig(cf Config) *AliceBlue {
 	}
 }
 
-func (a *AliceBlue) Connect() error {
+func NewFromEnv() (*AliceBlue, error) {
 	var err error
 
+	if err = godotenv.Load(".env"); err != nil {
+		return &AliceBlue{}, err
+	}
+
+	baseURL := os.Getenv("BASE_URL")
+	return &AliceBlue{
+		apiKey:    os.Getenv("API_KEY"),
+		clientId:  os.Getenv("CLIENT_ID"),
+		baseURL:   baseURL,
+		endpoints: endpoints.New(baseURL),
+	}, nil
+}
+
+func (a *AliceBlue) Connect() error {
+
+	if a.apiKey == "" || a.clientId == "" {
+		return errors.New("apikey or client id not provided")
+	}
+
+	var err error
 	var enc EncryptionResponse
 	if enc, err = a.GetAPIEncKey(); err != nil {
+		fmt.Println("get api enc key failed")
 		return err
 	}
 	a.encKey = enc.EncKey
 
 	var session SessionResponse
 	if session, err = a.GetUserSID(); err != nil {
+		fmt.Println("get user sid failed")
 		return err
 	}
 

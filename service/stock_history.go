@@ -2,6 +2,9 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
+	"imyashkale/go-aliceblue-sdk/options"
+	"net/http"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -36,6 +39,14 @@ func (a AliceBlue) GetStockHistory(params StockHistoryInput) (StockHistoryRespon
 
 	client := resty.New()
 
+	if params.Resolution == "" {
+		params.Resolution = options.Day
+	}
+
+	if params.Exchange == "" {
+		params.Exchange = options.NSE
+	}
+
 	pm := map[string]any{
 		"token":      params.Token,
 		"resolution": params.Resolution,
@@ -49,8 +60,13 @@ func (a AliceBlue) GetStockHistory(params StockHistoryInput) (StockHistoryRespon
 		return StockHistoryResponse{}, err
 	}
 
+	if rsp.StatusCode() == http.StatusUnauthorized {
+		return StockHistoryResponse{}, errors.New("unauthorized request")
+	}
+
 	if err = json.Unmarshal(rsp.Body(), &sh); err != nil {
 		return StockHistoryResponse{}, err
 	}
 	return sh, err
 }
+
