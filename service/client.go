@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
-	"imyashkale/go-aliceblue-sdk/endpoints"
+	"github.com/imyashkale/go-aliceblue-sdk/endpoints"
 	"os"
 
 	"github.com/joho/godotenv"

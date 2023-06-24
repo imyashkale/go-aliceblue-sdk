@@ -1,7 +1,7 @@
 package service_test
 
 import (
-	"imyashkale/go-aliceblue-sdk/service"
+	"github.com/imyashkale/go-aliceblue-sdk/service"
 	"testing"
 )
 

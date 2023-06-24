@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"imyashkale/go-aliceblue-sdk/options"
+	"github.com/imyashkale/go-aliceblue-sdk/options"
 	"net/http"
 	"time"
 

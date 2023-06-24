@@ -1,4 +1,4 @@
-module imyashkale/go-aliceblue-sdk
+module github.com/imyashkale/go-aliceblue-sdk
 
 go 1.20
 
