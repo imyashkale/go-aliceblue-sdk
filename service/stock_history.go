@@ -12,12 +12,12 @@ import (
 )
 
 type Stock struct {
-	Volume float64 `json:"volume"`
-	High   float64 `json:"high"`
-	Low    float64 `json:"low"`
-	Time   string  `json:"time"`
-	Close  float64 `json:"close"`
-	Open   float64 `json:"open"`
+	Volume float64   `json:"volume"`
+	High   float64   `json:"high"`
+	Low    float64   `json:"low"`
+	Time   time.Time `json:"time"`
+	Close  float64   `json:"close"`
+	Open   float64   `json:"open"`
 }
 
 type StockHistoryResponse struct {
@@ -72,6 +72,6 @@ func (a AliceBlue) GetStockHistory(params StockHistoryInput) (StockHistoryRespon
 	if err = json.Unmarshal(rsp.Body(), &sh); err != nil {
 		return StockHistoryResponse{}, err
 	}
+
 	return sh, err
 }
-
