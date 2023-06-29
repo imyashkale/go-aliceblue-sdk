@@ -2,6 +2,8 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
+	"net/http"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -29,6 +31,10 @@ func (a AliceBlue) GetAccountDetails() (AccountResponse, error) {
 	if rsp, err = client.R().SetAuthToken(a.token).
 		Get(a.endpoints.GetAccountDetails); err != nil {
 		return AccountResponse{}, err
+	}
+
+	if rsp.StatusCode() != http.StatusOK {
+		return AccountResponse{}, fmt.Errorf("GetAccountDetails code: %d body: %s", rsp.StatusCode(), rsp.String())
 	}
 
 	if err = json.Unmarshal(rsp.Body(), &ar); err != nil {

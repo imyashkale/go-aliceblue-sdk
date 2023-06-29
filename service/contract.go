@@ -2,6 +2,8 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
+	"net/http"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -30,6 +32,10 @@ func (a AliceBlue) GetNSEContracts() (NSEContractResponse, error) {
 		return contracts, err
 	}
 
+	if rsp.StatusCode() != http.StatusOK {
+		return contracts, fmt.Errorf("GetNSEContracts code: %d body: %s", rsp.StatusCode(), rsp.String())
+	}
+
 	if err = json.Unmarshal(rsp.Body(), &contracts); err != nil {
 		return contracts, err
 	}
@@ -45,6 +51,10 @@ func (a AliceBlue) GetBSEContracts() (BSEContractResponse, error) {
 	var rsp *resty.Response
 	if rsp, err = client.R().EnableTrace().SetQueryParam("exch", "BSE").Get(a.endpoints.ContractMaster); err != nil {
 		return contracts, err
+	}
+
+	if rsp.StatusCode() != http.StatusOK {
+		return contracts, fmt.Errorf("GetBSEContracts code: %d body: %s", rsp.StatusCode(), rsp.String())
 	}
 
 	if err = json.Unmarshal(rsp.Body(), &contracts); err != nil {

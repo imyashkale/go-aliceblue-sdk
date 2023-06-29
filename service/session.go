@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/go-resty/resty/v2"
@@ -34,6 +35,10 @@ func (a *AliceBlue) GetUserSID() (SessionResponse, error) {
 	var rsp *resty.Response
 	if rsp, err = client.R().EnableTrace().SetBody(rb).Post(a.endpoints.GetUserSID); err != nil {
 		return SessionResponse{}, err
+	}
+	
+	if rsp.StatusCode() != http.StatusOK {
+		return SessionResponse{}, fmt.Errorf("GetUserSID code: %d body: %s", rsp.StatusCode(), rsp.String())
 	}
 
 	if err = json.Unmarshal(rsp.Body(), &session); err != nil {

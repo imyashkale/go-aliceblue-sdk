@@ -2,11 +2,11 @@ package service
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
-	"github.com/imyashkale/go-aliceblue-sdk/options"
 	"net/http"
 	"time"
+
+	"github.com/imyashkale/go-aliceblue-sdk/options"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -61,12 +61,8 @@ func (a AliceBlue) GetStockHistory(params StockHistoryInput) (StockHistoryRespon
 		return StockHistoryResponse{}, err
 	}
 
-	if rsp.StatusCode() == http.StatusUnauthorized {
-		return StockHistoryResponse{}, errors.New("unauthorized request")
-	}
-
 	if rsp.StatusCode() != http.StatusOK {
-		return StockHistoryResponse{}, fmt.Errorf("get history request failed - %s", rsp.String())
+		return StockHistoryResponse{}, fmt.Errorf("GetStockHistory code: %d body: %s", rsp.StatusCode(), rsp.String())
 	}
 
 	if err = json.Unmarshal(rsp.Body(), &sh); err != nil {

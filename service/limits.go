@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -67,7 +68,10 @@ func (a AliceBlue) GetLimits() ([]Limit, error) {
 		return limits, err
 	}
 
-	fmt.Println(rsp.String())
+	if rsp.StatusCode() != http.StatusOK {
+		return limits, fmt.Errorf("GetLimits code: %d body: %s", rsp.StatusCode(), rsp.String())
+	}
+
 	if err = json.Unmarshal(rsp.Body(), &limits); err != nil {
 		return limits, err
 	}

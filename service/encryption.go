@@ -2,6 +2,8 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
+	"net/http"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -33,6 +35,10 @@ func (a *AliceBlue) GetAPIEncKey() (EncryptionResponse, error) {
 	var rsp *resty.Response
 	if rsp, err = client.R().EnableTrace().SetBody(rb).Post(a.endpoints.GetEncryptionKey); err != nil {
 		return EncryptionResponse{}, err
+	}
+
+	if rsp.StatusCode() != http.StatusOK {
+		return EncryptionResponse{}, fmt.Errorf("GetAPIEncKey code: %d body: %s", rsp.StatusCode(), rsp.String())
 	}
 
 	if err = json.Unmarshal(rsp.Body(), &encryption); err != nil {

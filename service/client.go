@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"fmt"
-	"github.com/imyashkale/go-aliceblue-sdk/endpoints"
 	"os"
+
+	"github.com/imyashkale/go-aliceblue-sdk/endpoints"
 
 	"github.com/joho/godotenv"
 )
@@ -61,14 +61,12 @@ func (a *AliceBlue) Connect() error {
 	var err error
 	var enc EncryptionResponse
 	if enc, err = a.GetAPIEncKey(); err != nil {
-		fmt.Println("get api enc key failed")
 		return err
 	}
 	a.encKey = enc.EncKey
 
 	var session SessionResponse
 	if session, err = a.GetUserSID(); err != nil {
-		fmt.Println("get user sid failed")
 		return err
 	}
 
