@@ -34,11 +34,12 @@ type StockHistoryInput struct {
 	Exchange   string    `json:"exchange"`
 }
 
-func (a AliceBlue) GetStockHistory(params StockHistoryInput) (StockHistoryResponse, error) {
+func (a *AliceBlue) GetStockHistory(params StockHistoryInput) (StockHistoryResponse, error) {
 	var err error
 	var sh StockHistoryResponse
 
 	client := resty.New()
+	client.SetRetryCount(3)
 
 	if params.Resolution == "" {
 		params.Resolution = options.Day
@@ -57,7 +58,7 @@ func (a AliceBlue) GetStockHistory(params StockHistoryInput) (StockHistoryRespon
 	}
 
 	var rsp *resty.Response
-	if rsp, err = client.R().EnableTrace().SetAuthToken(a.token).SetBody(pm).Post(a.endpoints.GetStockHistory); err != nil {
+	if rsp, err = client.R().EnableTrace().SetAuthToken(a.token).AddRetryCondition(a.retryUnAuthorized).SetBody(pm).Post(a.endpoints.GetStockHistory); err != nil {
 		return StockHistoryResponse{}, err
 	}
 

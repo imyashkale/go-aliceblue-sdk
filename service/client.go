@@ -60,13 +60,13 @@ func (a *AliceBlue) Connect() error {
 
 	var err error
 	var enc EncryptionResponse
-	if enc, err = a.GetAPIEncKey(); err != nil {
+	if enc, err = a.getAPIEncKey(); err != nil {
 		return err
 	}
 	a.encKey = enc.EncKey
 
 	var session SessionResponse
-	if session, err = a.GetUserSID(); err != nil {
+	if session, err = a.getUserSID(); err != nil {
 		return err
 	}
 

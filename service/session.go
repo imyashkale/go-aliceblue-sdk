@@ -16,7 +16,7 @@ type SessionResponse struct {
 	Token     string `json:"token"`
 }
 
-func (a *AliceBlue) GetUserSID() (SessionResponse, error) {
+func (a *AliceBlue) getUserSID() (SessionResponse, error) {
 	var session SessionResponse
 	var err error
 
@@ -36,13 +36,17 @@ func (a *AliceBlue) GetUserSID() (SessionResponse, error) {
 	if rsp, err = client.R().EnableTrace().SetBody(rb).Post(a.endpoints.GetUserSID); err != nil {
 		return SessionResponse{}, err
 	}
-	
+
 	if rsp.StatusCode() != http.StatusOK {
 		return SessionResponse{}, fmt.Errorf("GetUserSID code: %d body: %s", rsp.StatusCode(), rsp.String())
 	}
 
 	if err = json.Unmarshal(rsp.Body(), &session); err != nil {
 		return SessionResponse{}, err
+	}
+
+	if session.SessionID == "" {
+		return SessionResponse{}, fmt.Errorf("GetAPIEncKey session id not found in response code: %d body: %s", rsp.StatusCode(), rsp.String())
 	}
 
 	session.Token = fmt.Sprintf("%s %s", a.clientId, session.SessionID)

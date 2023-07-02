@@ -2,19 +2,22 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/imyashkale/go-aliceblue-sdk/service"
 )
 
 func main() {
-	
-	var err error
-	var ab *service.AliceBlue
 
-	if ab, err = service.NewFromEnv(); err != nil {
-		panic(err)
+	var err error
+
+	cf := service.Config{
+		APIKey:   os.Getenv("API_KEY"),
+		ClientId: os.Getenv("CLIENT_ID"),
 	}
+
+	ab := service.NewFromConfig(cf)
 
 	if err = ab.Connect(); err != nil {
 		panic(err)

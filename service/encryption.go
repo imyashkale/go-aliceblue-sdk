@@ -22,7 +22,7 @@ type EncryptionResponse struct {
 	Login     bool        `json:"login"`
 }
 
-func (a *AliceBlue) GetAPIEncKey() (EncryptionResponse, error) {
+func (a *AliceBlue) getAPIEncKey() (EncryptionResponse, error) {
 	var err error
 	var encryption EncryptionResponse
 
@@ -42,7 +42,12 @@ func (a *AliceBlue) GetAPIEncKey() (EncryptionResponse, error) {
 	}
 
 	if err = json.Unmarshal(rsp.Body(), &encryption); err != nil {
-		return EncryptionResponse{}, err
+		return EncryptionResponse{}, fmt.Errorf("GetAPIEncKey unmarshaling failed body: %s", rsp.String())
 	}
+
+	if encryption.EncKey == "" {
+		return EncryptionResponse{}, fmt.Errorf("GetAPIEncKey response doesn't contain encryption key body: %s", rsp.String())
+	}
+
 	return encryption, err
 }
